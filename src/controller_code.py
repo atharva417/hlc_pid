@@ -217,7 +217,7 @@ class Controller:
 
 	   
 		self.g = 9.8
-		print(g)
+		
 	
 	def altitude_controller(self,
 					   z_target,
