@@ -217,6 +217,7 @@ class Controller:
 
 	   
 		self.g = 9.8
+		print(g)
 	
 	def altitude_controller(self,
 					   z_target,
@@ -276,8 +277,8 @@ class Controller:
 		b_x_c = x_dot_dot_command / c
 		b_y_c = y_dot_dot_command / c
 
-		print(' X acc target :',x_dot_dot_target,' | x_dot_err :',x_dot_target - x_dot_actual,'x-err :',x_target - x_actual)
-		print(' Y acc target :',y_dot_dot_target,' | y_dot_err :',y_dot_target - y_dot_actual,'y-err :',y_target - y_actual)
+		#print(' X acc target :',x_dot_dot_target,' | x_dot_err :',x_dot_target - x_dot_actual,'x-err :',x_target - x_actual)
+		#print(' Y acc target :',y_dot_dot_target,' | y_dot_err :',y_dot_target - y_dot_actual,'y-err :',y_target - y_actual)
 		return b_x_c, b_y_c
 
 	def roll_pitch_controller(self,
@@ -301,7 +302,7 @@ class Controller:
 		p_c = rot_rate[0]
 		q_c = rot_rate[1]
 
-		print('roll error :',b_x_c_target - b_x,' | pitch error :',b_y_c_target - b_y)
+		#print('roll error :',b_x_c_target - b_x,' | pitch error :',b_y_c_target - b_y)
 
 		return p_c, q_c
 
