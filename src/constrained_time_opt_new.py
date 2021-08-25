@@ -5,7 +5,7 @@ from qpsolvers import solve_qp
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 import warnings
-# import tensorflow as tf
+import tensorflow as tf
 from scipy.optimize import Bounds,minimize
 warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
@@ -205,7 +205,7 @@ class min_snap:
 
 
     def plot(self,colr,label):
-        ax = plt.axes(projection ='3d')
+        #ax = plt.axes(projection ='3d')
 
         ax.scatter(self.x, self.y, self.z, c='black',marker='o',s=20)
 
@@ -323,9 +323,9 @@ class min_snap:
 
 
 if __name__ == '__main__':
-    x=[0,0,0,0]
-    y=[0,0,0,0]
-    z=[4,6,10,12]
+    x=[0,5,10,5,0]
+    y=[0,0,0,0,0]
+    z=[10,15,10,5,10]
     '''x = [0,0,-2,0]
     y = [0,2,0,-2]
     z = [0,3,5,7]

@@ -1,4 +1,3 @@
-#!/usr/bin/python3
 
 import rospy
 import time
@@ -58,13 +57,15 @@ class DroneIn3D:
 		#POSITION QAUD
 		rospy.loginfo('INIT')
 		self.setarm(1)
-		# rospy.sleep(2)
+		rospy.sleep(2)
 		self.offboard()
 		self.takeoff(1.0)
 		#self.offboard()
 		rospy.sleep(5)
 		self.gotopose(0,0,4)
 		rospy.sleep(5)
+
+
 		
 		
 		
@@ -131,6 +132,7 @@ class DroneIn3D:
 			self.pub.publish(self.sp)
 			dist = np.sqrt(((self.X[0]-x)**2) + ((self.X[1]-y)**2) + ((self.X[2]-z)**2))
 			rate.sleep()
+		#print(self.X[0],self.X[1],self.X[2])
 		#print('Reached ',x,y,z) 
 
 
@@ -217,7 +219,6 @@ class Controller:
 
 	   
 		self.g = 9.8
-		
 	
 	def altitude_controller(self,
 					   z_target,
@@ -277,8 +278,8 @@ class Controller:
 		b_x_c = x_dot_dot_command / c
 		b_y_c = y_dot_dot_command / c
 
-		#print(' X acc target :',x_dot_dot_target,' | x_dot_err :',x_dot_target - x_dot_actual,'x-err :',x_target - x_actual)
-		#print(' Y acc target :',y_dot_dot_target,' | y_dot_err :',y_dot_target - y_dot_actual,'y-err :',y_target - y_actual)
+		print(' X acc target :',x_dot_dot_target,' | x_dot_err :',x_dot_target - x_dot_actual,'x-err :',x_target - x_actual)
+		print(' Y acc target :',y_dot_dot_target,' | y_dot_err :',y_dot_target - y_dot_actual,'y-err :',y_target - y_actual)
 		return b_x_c, b_y_c
 
 	def roll_pitch_controller(self,
@@ -297,12 +298,13 @@ class Controller:
 
 		rot_mat1 = np.array([[rot_mat[1,0], -rot_mat[0,0]], 
 							[rot_mat[1,1], -rot_mat[0,1]]]) / rot_mat[2,2]
-
+		
+		#print('matrix',rot_mat1)
 		rot_rate = np.matmul(rot_mat1, np.array([b_x_commanded_dot, b_y_commanded_dot]).T)
 		p_c = rot_rate[0]
 		q_c = rot_rate[1]
 
-		#print('roll error :',b_x_c_target - b_x,' | pitch error :',b_y_c_target - b_y)
+		print('roll error :',b_x_c_target - b_x,' | pitch error :',b_y_c_target - b_y)
 
 		return p_c, q_c
 
@@ -329,8 +331,8 @@ def actuate(x,y,z,v_test,v_min,v_max):
 	#plt.show()
 
 	drone = DroneIn3D() 
-	#sleep(2)   
-	control_system = Controller(z_k_p=20.0,z_k_d=1.5,x_k_p=0.8,x_k_d=0.0,y_k_p=0.0,y_k_d=0.0,k_p_roll=0.0,k_p_pitch=20,
+	#sleep(2)                         
+	control_system = Controller(z_k_p=10.0,z_k_d=1,x_k_p=5,x_k_d=0.1,y_k_p=0.0,y_k_d=0.0,k_p_roll=14,k_p_pitch=0.00,   #32
 	k_p_yaw=0.0)
 	iter=0 
 	rate=rospy.Rate(20) 
@@ -338,6 +340,7 @@ def actuate(x,y,z,v_test,v_min,v_max):
 	#print(z_path)
 	#for i in range(0,z_path.shape[0]):
 	while (iter<np.shape(z_path)[0]):
+		str_time=rospy.get_time()
 		
 		rot_mat = drone.R()
 
@@ -376,20 +379,30 @@ def actuate(x,y,z,v_test,v_min,v_max):
 		ATT.header.frame_id='map'
 		ATT.type_mask=134
 		ATT.body_rate.x=p_c
-		ATT.body_rate.y=q_c
+		ATT.body_rate.y=0  #q_c
 		ATT.body_rate.z=r_c
-		if c<0:
+		ATT.thrust=max(0,min(((c-9.8)/(2*(18.666-9.8))) + 0.5,1))
+		'''if c<0:
 			ATT.thrust=0
 		else:
-			scaled_thrust=((c-9.8)/(2*9.8)) + 0.5
-			ATT.thrust=scaled_thrust
-		print('Calculated thrust :',c,' | Scaled Thrust : ',ATT.thrust,'| Body rates :',p_c,q_c,r_c,'\n')
-		drone.publish_attitude_thrust.publish(ATT)    
+			scaled_thrust=((c-9.8)/(2*(18.666-9.8))) + 0.5
+			ATT.thrust=scaled_thrust'''
+
 		
+		drone.publish_attitude_thrust.publish(ATT)    
+		print('Calculated thrust :',c,' | Scaled Thrust : ',ATT.thrust,'| Pub Body rates :',p_c,q_c,r_c,'\n')
 		iter+=1
+
 		rate.sleep()
+		end_time=rospy.get_time()
+		print(end_time-str_time)
+		
 	print(' STARTING !!')
-	drone.gotopose(0,0,12)
+	#drone.gotopose(drone.X[0],drone.X[1],drone.X[2])
+	#rospy.sleep(5)
+	drone.gotopose(6,0,4)
+
+
 			
 
 
@@ -399,10 +412,13 @@ def actuate(x,y,z,v_test,v_min,v_max):
 
 
 #if __name__ == '__main__':
-x=[0,2,3,5]
+# x=[0,5,10,5,0]
+# y=[0,0,0,0,0]
+# z=[10,15,10,5,10]
+x=[0,2,4,6]
 #y=[0,1,4,5]
 y=[0,0,0,0]
-z=[4,6,10,12]
+z=[4,4,4,4]
 '''x = [0,0,-2,0]
 y = [0,2,0,-2]
 z = [0,3,5,7]
