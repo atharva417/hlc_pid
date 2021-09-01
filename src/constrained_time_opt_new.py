@@ -33,12 +33,12 @@ class min_snap:
         print('\n\nTotal Time - TEST CASE :',self.give_tot(self.t_interval))
         
         self.t_intervals_min=self.give_intervals(self.time_array(self.v_max))
-        print('Max Velocity Possible :',self.v_max,'| Total time - MIN :',self.give_tot(self.t_intervals_min))
+        #print('Max Velocity Possible :',self.v_max,'| Total time - MIN :',self.give_tot(self.t_intervals_min))
         #print(self.t_intervals_min)
         
 
         self.t_intervals_max=self.give_intervals(self.time_array(self.v_min))
-        print('Min Velocity Allowed :',self.v_min,'| Total time - MAX :',self.give_tot(self.t_intervals_max))
+        #print('Min Velocity Allowed :',self.v_min,'| Total time - MAX :',self.give_tot(self.t_intervals_max))
         #print(self.t_intervals_max)
 
 
@@ -79,7 +79,7 @@ class min_snap:
         self.z_dot_path=[]
         self.z_dot_dot_path=[]
 
-        self.dt=0.01
+        self.dt=0.1
 
 
     def time_array(self,v):
@@ -245,14 +245,14 @@ class min_snap:
         #print(res)
         
         self.t_interval=res.x
-        print(self.t_interval)
+        #print(self.t_interval)
         t_final=[self.start_time]
         sum=self.start_time
         for i in range(len(self.t_interval)):
             sum+=self.t_interval[i]
             t_final.append(sum)
         self.t=np.copy(t_final)
-        print("Optimized Time segmentation :",self.t)
+        #print("Optimized Time segmentation :",self.t)
         print('Optimized Total time :',self.t[-1]-self.t[0])
 
     def get_trajectory_var(self):
