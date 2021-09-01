@@ -5,7 +5,6 @@ from qpsolvers import solve_qp
 import matplotlib.pyplot as plt
 from mpl_toolkits import mplot3d
 import warnings
-import tensorflow as tf
 from scipy.optimize import Bounds,minimize
 warnings.filterwarnings("ignore", category=np.VisibleDeprecationWarning)
 warnings.filterwarnings("ignore", category=FutureWarning)
