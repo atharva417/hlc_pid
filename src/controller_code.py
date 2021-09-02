@@ -332,7 +332,7 @@ def actuate(x,y,z,v_test,v_min,v_max):
 
 	drone = DroneIn3D() 
 	#sleep(2)                         
-	control_system = Controller(z_k_p=10.0,z_k_d=1,x_k_p=0.0,x_k_d=1,y_k_p=0.0,y_k_d=1,k_p_roll=0.75,k_p_pitch=0.75,   #32
+	control_system = Controller(z_k_p=10.0,z_k_d=1,x_k_p=0.155,x_k_d=0.075,y_k_p=0.155,y_k_d=0.075,k_p_roll=0.753,k_p_pitch=0.753,   #32
 	k_p_yaw=0.05)
 	iter=0 
 	rate=rospy.Rate(10) 
@@ -439,7 +439,7 @@ x=[2,-2,-2,1,4,6]
 y=[4,0,-2,-4,-3,-5]
 z=[10,7,5,3,0,1]'''
 v_test = 2
-v_min=0.1
-v_max=15
+v_min=0.05
+v_max=4
 
 actuate(x,y,z,v_test,v_min,v_max)
